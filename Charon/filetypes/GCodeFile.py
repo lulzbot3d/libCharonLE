@@ -67,7 +67,7 @@ class GCodeFile(FileInterface):
                 stream.seek(0)
 
             flavor = metadata.get("flavor", None)
-            if flavor == "Griffin":
+            if flavor in ("Griffin", "Cheetah"):
                 if metadata["header_version"] != "0.1":
                     raise InvalidHeaderException("Unsupported Griffin header version: {0}".format(metadata["header_version"]))
                 GCodeFile.__validateGriffinHeader(metadata)
