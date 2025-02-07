@@ -1,0 +1,72 @@
+name: Build package on Push or Pull Request
+
+on:
+  push
+  
+jobs:
+  Prepare:
+    name: 'Prepare'
+    uses: Ultimaker/embedded-workflows/.github/workflows/prepare_env.yml@main
+    with:
+      BUILD_DOCKER_CACHE: true
+    secrets: inherit
+
+  Shellcheck:
+    name: 'Test'
+    needs: Prepare
+    uses: Ultimaker/embedded-workflows/.github/workflows/shellcheck.yml@main
+    secrets: inherit
+
+  Flake8:
+    name: 'Test'
+    needs: Prepare
+    uses: Ultimaker/python-quality-control/.github/workflows/flake8.yml@master
+    with:
+      PARENT_BRANCH: 'master/s-line'
+    secrets: inherit
+
+  MyPy:
+    name: 'Test'
+    needs: Prepare
+    uses: Ultimaker/python-quality-control/.github/workflows/mypy.yml@master
+    with:
+      PARENT_BRANCH: 'master/s-line'
+    secrets: inherit
+
+  PyCodeStyle:
+    name: 'Test'
+    needs: Prepare
+    uses: Ultimaker/python-quality-control/.github/workflows/pycodestyle.yml@master
+    with:
+      PARENT_BRANCH: 'master/s-line'
+    secrets: inherit
+
+  Vulture:
+    name: 'Test'
+    needs: Prepare
+    uses: Ultimaker/python-quality-control/.github/workflows/vulture.yml@master
+    secrets: inherit
+
+  PyTest:
+    name: 'Test'
+    needs: Prepare
+    uses: Ultimaker/python-quality-control/.github/workflows/pytest.yml@master
+    secrets: inherit
+
+  Build:
+    name: 'Build'
+    needs: Prepare
+    uses: Ultimaker/embedded-workflows/.github/workflows/build.yml@main
+    with:
+      RELEASE_VERSION: ${{ needs.Prepare.outputs.RELEASE_VERSION }}
+    secrets: inherit
+
+  Release_Package:
+    name: 'Release'
+    needs: [Prepare, Shellcheck, Build, Flake8, MyPy, PyCodeStyle, Vulture, PyTest]
+    if: ${{ (success() && needs.Prepare.outputs.RELEASE_REPO != 'none') ||
+            (failure() && needs.Build.result == 'success' && needs.Prepare.outputs.RELEASE_REPO == 'packages-dev') }}
+    uses: Ultimaker/embedded-workflows/.github/workflows/release_pkg.yml@main
+    with:
+      RELEASE_REPO: ${{ needs.Prepare.outputs.RELEASE_REPO }}
+    secrets: inherit

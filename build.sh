@@ -27,6 +27,7 @@ build()
 create_debian_package()
 {
     make package
+    cp ./*.deb ../ || true
 }
 
 cleanup()

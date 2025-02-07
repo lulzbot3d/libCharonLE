@@ -3,7 +3,7 @@
 set -eu
 
 # Run the make_docker.sh script here, within the context of the run_all_tests.sh script
-. ./make_docker.sh
+. ./docker_env/make_docker.sh
 
 git fetch
 
