@@ -11,5 +11,4 @@ jobs:
     uses: lulzbot3d/CuraLE_Workflows/.github/workflows/update-lulzbot-forks.yml@main
     with:
       repo: 'libCharon'
-      branch: 'master/s-line'
     secrets: inherit
