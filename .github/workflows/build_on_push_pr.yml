@@ -22,7 +22,7 @@ jobs:
     needs: Prepare
     uses: Ultimaker/python-quality-control/.github/workflows/flake8.yml@master
     with:
-      PARENT_BRANCH: 'master/s-line'
+      PARENT_BRANCH: 'main'
     secrets: inherit
 
   MyPy:
@@ -30,7 +30,7 @@ jobs:
     needs: Prepare
     uses: Ultimaker/python-quality-control/.github/workflows/mypy.yml@master
     with:
-      PARENT_BRANCH: 'master/s-line'
+      PARENT_BRANCH: 'main'
     secrets: inherit
 
   PyCodeStyle:
@@ -38,7 +38,7 @@ jobs:
     needs: Prepare
     uses: Ultimaker/python-quality-control/.github/workflows/pycodestyle.yml@master
     with:
-      PARENT_BRANCH: 'master/s-line'
+      PARENT_BRANCH: 'main'
     secrets: inherit
 
   Vulture:
