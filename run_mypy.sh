@@ -2,7 +2,7 @@
 
 set -eu
 
-. ./make_docker.sh
+. ./docker_env/make_docker.sh
 
 git fetch
 

@@ -2,7 +2,7 @@
 
 set -eu
 
-. ./make_docker.sh
+. ./docker_env/make_docker.sh
 
 run_in_docker "ci/complexity_analysis.sh" || echo "Failed!"
 

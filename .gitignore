@@ -7,6 +7,10 @@ __pycache__/
 # Build folder
 _build_armhf/*
 
+# Ignore MyTest data
+.pytest_cache/
+pstats/
+
 # VIM temp files
 *.swp
 
