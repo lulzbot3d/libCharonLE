@@ -7,17 +7,17 @@ set -eu
 
 DOCKER_BUILD_ONLY_CACHE="${DOCKER_BUILD_ONLY_CACHE:-no}"
 DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME:-libcharon}"
-DOCKER_REGISTRY_NAME="ghcr.io/ultimaker/${DOCKER_IMAGE_NAME}"
+DOCKER_REGISTRY_NAME="ghcr.io/lulzbot3d/${DOCKER_IMAGE_NAME}"
 
 echo "Checking for image updates"
 
 # Creates a new docker driver named "ultimaker" if it doesnt exist yet.
-docker buildx create --name ultimaker --driver=docker-container 2> /dev/null || true
+docker buildx create --name lulzbot3d --driver=docker-container 2> /dev/null || true
 
 if [ "${DOCKER_BUILD_ONLY_CACHE}" = "yes" ]; then
-    docker buildx build --builder ultimaker --cache-to "${DOCKER_REGISTRY_NAME}" --cache-from "${DOCKER_REGISTRY_NAME}" -f docker_env/Dockerfile -t "${DOCKER_IMAGE_NAME}" .
+    docker buildx build --builder lulzbot3d --cache-to "${DOCKER_REGISTRY_NAME}" --cache-from "${DOCKER_REGISTRY_NAME}" -f docker_env/Dockerfile -t "${DOCKER_IMAGE_NAME}" .
 else
-    docker buildx build --builder ultimaker --load --cache-from "${DOCKER_REGISTRY_NAME}" -f docker_env/Dockerfile -t "${DOCKER_IMAGE_NAME}" .
+    docker buildx build --builder lulzbot3d --load --cache-from "${DOCKER_REGISTRY_NAME}" -f docker_env/Dockerfile -t "${DOCKER_IMAGE_NAME}" .
 
     if ! docker run --rm --privileged "${DOCKER_IMAGE_NAME}" "./buildenv_check.sh"; then
         echo "Something is wrong with the build environment, please check your Dockerfile."

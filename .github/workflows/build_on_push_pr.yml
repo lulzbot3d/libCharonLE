@@ -6,7 +6,7 @@ on:
 jobs:
   Prepare:
     name: 'Prepare'
-    uses: Ultimaker/embedded-workflows/.github/workflows/prepare_env.yml@main
+    uses: lulzbot3d/CuraLE_Embedded_Workflows/.github/workflows/prepare_env.yml@main
     with:
       BUILD_DOCKER_CACHE: true
     secrets: inherit
@@ -14,13 +14,13 @@ jobs:
   Shellcheck:
     name: 'Test'
     needs: Prepare
-    uses: Ultimaker/embedded-workflows/.github/workflows/shellcheck.yml@main
+    uses: lulzbot3d/CuraLE_Embedded_Workflows/.github/workflows/shellcheck.yml@main
     secrets: inherit
 
   Flake8:
     name: 'Test'
     needs: Prepare
-    uses: Ultimaker/python-quality-control/.github/workflows/flake8.yml@master
+    uses: lulzbot3d/Python_Quality_Control_LE/.github/workflows/flake8.yml@main
     with:
       PARENT_BRANCH: 'main'
     secrets: inherit
@@ -28,7 +28,7 @@ jobs:
   MyPy:
     name: 'Test'
     needs: Prepare
-    uses: Ultimaker/python-quality-control/.github/workflows/mypy.yml@master
+    uses: lulzbot3d/Python_Quality_Control_LE/.github/workflows/mypy.yml@main
     with:
       PARENT_BRANCH: 'main'
     secrets: inherit
@@ -36,7 +36,7 @@ jobs:
   PyCodeStyle:
     name: 'Test'
     needs: Prepare
-    uses: Ultimaker/python-quality-control/.github/workflows/pycodestyle.yml@master
+    uses: lulzbot3d/Python_Quality_Control_LE/.github/workflows/pycodestyle.yml@main
     with:
       PARENT_BRANCH: 'main'
     secrets: inherit
@@ -44,19 +44,19 @@ jobs:
   Vulture:
     name: 'Test'
     needs: Prepare
-    uses: Ultimaker/python-quality-control/.github/workflows/vulture.yml@master
+    uses: lulzbot3d/Python_Quality_Control_LE/.github/workflows/vulture.yml@main
     secrets: inherit
 
   PyTest:
     name: 'Test'
     needs: Prepare
-    uses: Ultimaker/python-quality-control/.github/workflows/pytest.yml@master
+    uses: lulzbot3d/Python_Quality_Control_LE/.github/workflows/pytest.yml@main
     secrets: inherit
 
   Build:
     name: 'Build'
     needs: Prepare
-    uses: Ultimaker/embedded-workflows/.github/workflows/build.yml@main
+    uses: lulzbot3d/CuraLE_Embedded_Workflows/.github/workflows/build.yml@main
     with:
       RELEASE_VERSION: ${{ needs.Prepare.outputs.RELEASE_VERSION }}
     secrets: inherit
@@ -66,7 +66,7 @@ jobs:
     needs: [Prepare, Shellcheck, Build, Flake8, MyPy, PyCodeStyle, Vulture, PyTest]
     if: ${{ (success() && needs.Prepare.outputs.RELEASE_REPO != 'none') ||
             (failure() && needs.Build.result == 'success' && needs.Prepare.outputs.RELEASE_REPO == 'packages-dev') }}
-    uses: Ultimaker/embedded-workflows/.github/workflows/release_pkg.yml@main
+    uses: lulzbot3d/CuraLE_Embedded_Workflows/.github/workflows/release_pkg.yml@main
     with:
       RELEASE_REPO: ${{ needs.Prepare.outputs.RELEASE_REPO }}
     secrets: inherit
